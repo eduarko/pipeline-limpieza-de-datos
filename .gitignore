@@ -1,0 +1,17 @@
+#Variables de entorno
+.env
+
+#Logs
+*.log
+
+#Datos generados
+ordenes_ecommerce_*.csv
+
+#Python
+__pycache__/
+*.pyc
+venv/
+
+#IDE
+.vscode/
+.idea/

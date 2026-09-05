@@ -46,7 +46,9 @@ def leer_csv():
 def limpiar_datos(df):
     """Limpia y transforma los datos
     - Colocar el formato correcto a la fecha para un buen análisis
+    
     - Parte de la limpieza también puede incluir la traducción de los datos para una lectura mas fácil para el público objetivo"""
+
     try:
         #Seleccionar columnas
         columnas = ['Order_ID', 'Order_Date', 'Order_Status', 'Region',

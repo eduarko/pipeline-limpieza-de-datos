@@ -1,3 +1,13 @@
+"""Este script lee, limpia y transforma un dataset con la ayuda de pandas, con la finalidad de alimentar a un dashboard de Power Bi.
+
+Reflexiones:
+1. Se separó la lógica en 3 funciones(leer, limpiar, guardar) para poder realizar el mantenimiento y mejora del código rápidamente.Además de facilitar
+el testeo y  la reutilización de funciones.
+
+2. Las rutas de archivos viven en un .env en lugar de estar hardcodeadas, esto con la finalidad de que el usuario pueda configurar rápidamente sus propias rutas
+
+"""
+
 
 import pandas as pd
 import os
@@ -7,6 +17,7 @@ from datetime import datetime
 
 
 #Configurar el logging
+"""Configuracion del logging para realizar el seguimiento del proceso"""
 logging.basicConfig(
     filename='pipeline.log',
     level=logging.INFO,
@@ -15,6 +26,7 @@ logging.basicConfig(
 )
 
 #Definicion de orígenes
+"""Configuración de los archivos para evitar hardcodear el código y sea fácil su implementación"""
 load_dotenv()
 
 RUTA_CSV = os.getenv('RUTA_CSV_ENTRADA')
@@ -32,7 +44,9 @@ def leer_csv():
         raise
 
 def limpiar_datos(df):
-    """Limpia y transforma los datos"""
+    """Limpia y transforma los datos
+    - Colocar el formato correcto a la fecha para un buen análisis
+    - Parte de la limpieza también puede incluir la traducción de los datos para una lectura mas fácil para el público objetivo"""
     try:
         #Seleccionar columnas
         columnas = ['Order_ID', 'Order_Date', 'Order_Status', 'Region',
@@ -44,6 +58,26 @@ def limpiar_datos(df):
 
         #Eliminar nulos
         df_limpio = df_limpio.dropna()
+
+        #Traduciendo valores de Order_Status al español
+        traduccion_estados ={
+            'Delivered':'Entregado',
+            'Shipped':'Enviado',
+            'Cancelled':'Cancelado',
+            'Returned':'Devuelto'
+        }
+
+        df_limpio['Order_Status'] = df_limpio['Order_Status'].map(traduccion_estados)
+
+        traduccion_regiones={
+            'North':'Norte',
+            'South':'Sur',
+            'West':'Oeste',
+            'East':'Este',
+            'Central':'Centro'
+        }
+
+        df_limpio['Region'] = df_limpio['Region'].map(traduccion_regiones)
 
         #Renombrando columnas a español
         df_limpio.rename(columns={
@@ -78,6 +112,7 @@ def guardar_resultado(df):
         raise
 
 if __name__ == "__main__" :
+    
     try:
         logging.info("Iniciando pipeline")
 
@@ -90,6 +125,3 @@ if __name__ == "__main__" :
     except Exception as e:
         logging.error(f"Pipeline falló: {e}")
         print(f"Error: {e}")
-
-
-

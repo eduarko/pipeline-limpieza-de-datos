@@ -51,8 +51,9 @@ def limpiar_datos(df):
 
     try:
         #Seleccionar columnas
-        columnas = ['Order_ID', 'Order_Date', 'Order_Status', 'Region',
-                    'Delivery_Days', 'Quantity', 'Net_Sales']
+        columnas = ['Order_ID','Order_Date','Order_Status',"Delivery_Days",
+                    'Quantity','Net_Sales','Customer Age','Category',
+                    'Product_ID','Customer_ID','Customer_Rating']
         df_limpio = df[columnas].copy()
 
         #Transformando Order_Date a tipo datetime
@@ -83,12 +84,17 @@ def limpiar_datos(df):
 
         #Renombrando columnas a español
         df_limpio.rename(columns={
-            'Order_ID':'Pedido',
+            'Order_ID':'Codigo_Pedido',
             'Order_Date':'Fecha_Pedido',
             'Order_Status':'Estado_Orden',
             "Delivery_Days":'Dias_Entrega',
             'Quantity':'Cantidad',
-            'Net_Sales':'Venta_Neta'
+            'Net_Sales':'Venta_Neta',
+            'Customer Age':'Edad_Cliente',
+            'Category':'Categoria',
+            'Product_ID':'Codigo_Producto',
+            'Customer_ID':'Codigo_Cliente',
+            'Customer_Rating':'Calificacion_Cliente'
         }, inplace=True)
 
         logging.info(f"Datos limpios: {len(df_limpio)} registros")
